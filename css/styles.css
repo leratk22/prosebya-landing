@@ -133,9 +133,19 @@ a {
 }
 
 /* ---------- Шапка ---------- */
+/* .header держит место в потоке, а .header__bar при прокрутке становится закреплённой панелью */
 .header {
   position: relative;
-  z-index: 10;
+  height: 87px;
+}
+
+.header__bar {
+  position: relative;
+  z-index: 60;
+}
+
+.header__inner {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -148,6 +158,59 @@ a {
 .header__logo img {
   width: 139px;
   height: 39px;
+}
+
+/* закреплённая панель: как на prosebya.ru — белая, выезжает сверху за 450 мс */
+.header__bar.is-fixed {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  background: var(--color-white);
+  animation: header-in 0.45s linear;
+}
+.header__bar.is-leaving {
+  animation: header-out 0.45s linear forwards;
+}
+
+@keyframes header-in {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes header-out {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+@media (min-width: 960px) {
+  .header__bar.is-fixed .header__inner {
+    height: 54px;
+  }
+  .header__bar.is-fixed .header__logo img {
+    width: 108px;
+    height: 30px;
+  }
+  .header__bar.is-fixed .nav__link {
+    font-size: 14px;
+  }
+  .header__bar.is-fixed .nav__cta {
+    font-weight: 500;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header__bar.is-fixed,
+  .header__bar.is-leaving {
+    animation-duration: 0.01s;
+  }
 }
 
 .header__burger {
@@ -366,6 +429,9 @@ a {
   /* шапка и меню */
   .header {
     height: 44px;
+  }
+  .header__inner {
+    height: 44px;
     padding: 0 25px 0 20px;
   }
   .header__logo img {
@@ -392,7 +458,7 @@ a {
   }
   .nav {
     position: absolute;
-    top: 44px;
+    top: 100%;
     right: 0;
     left: 0;
     display: none;
@@ -431,8 +497,10 @@ a {
     font-size: 15px;
     line-height: 22px;
   }
+  /* кнопка по размеру содержимого, а не на всю ширину, чтобы не походить на поле ввода */
   .btn--ghost-inverted {
-    justify-content: space-between;
+    align-self: flex-start;
+    gap: 16px;
     height: 52px;
     padding: 0 8px 0 24px;
     font-size: 16px;

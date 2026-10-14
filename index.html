@@ -13,19 +13,23 @@
 <body>
 
   <header class="header">
-    <a class="header__logo" href="https://prosebya.ru/" aria-label="Просебя — на главную">
-      <img src="assets/logo.svg" alt="Просебя" width="139" height="39">
-    </a>
-    <button class="header__burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="menu">
-      <span></span><span></span>
-    </button>
-    <nav class="nav" id="menu" aria-label="Основное меню">
-      <a class="nav__link" href="https://prosebya.ru/psikholog-dlya-sotrudnikov">Корпоративный психолог</a>
-      <a class="nav__link" href="https://prosebya.ru/business">Для бизнеса</a>
-      <a class="nav__link" href="https://prosebya.ru/launch">Для людей</a>
-      <a class="nav__link" href="https://prosebya.ru/gifts">Сертификаты</a>
-      <a class="btn btn--brand nav__cta" href="https://prosebya.ru/#form">Оставить заявку</a>
-    </nav>
+    <div class="header__bar">
+      <div class="header__inner">
+        <a class="header__logo" href="https://prosebya.ru/" aria-label="Просебя — на главную">
+          <img src="assets/logo.svg" alt="Просебя" width="139" height="39">
+        </a>
+        <button class="header__burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="menu">
+          <span></span><span></span>
+        </button>
+        <nav class="nav" id="menu" aria-label="Основное меню">
+          <a class="nav__link" href="https://prosebya.ru/psikholog-dlya-sotrudnikov">Корпоративный психолог</a>
+          <a class="nav__link" href="https://prosebya.ru/business">Для бизнеса</a>
+          <a class="nav__link" href="https://prosebya.ru/launch">Для людей</a>
+          <a class="nav__link" href="https://prosebya.ru/gifts">Сертификаты</a>
+          <a class="btn btn--brand nav__cta" href="https://prosebya.ru/#form">Оставить заявку</a>
+        </nav>
+      </div>
+    </div>
   </header>
 
   <section class="notice" aria-labelledby="notice-title">
@@ -95,14 +99,41 @@
   </main>
 
   <script>
-    // Мобильное меню: бургер открывает и закрывает список ссылок
     (function () {
+      var bar = document.querySelector('.header__bar');
       var burger = document.querySelector('.header__burger');
       var menu = document.getElementById('menu');
+
+      // Мобильное меню: бургер открывает и закрывает список ссылок
       burger.addEventListener('click', function () {
         var open = menu.classList.toggle('is-open');
         burger.setAttribute('aria-expanded', open ? 'true' : 'false');
       });
+
+      // Как на prosebya.ru: обычная шапка уезжает вместе со страницей,
+      // а после прокрутки сверху выезжает компактная панель и остаётся закреплённой
+      var SHOW_AFTER = 250;
+      var stuck = false;
+
+      function onScroll() {
+        var need = window.scrollY > SHOW_AFTER;
+        if (need === stuck) return;
+        stuck = need;
+        if (need) {
+          bar.classList.remove('is-leaving');
+          bar.classList.add('is-fixed');
+        } else if (window.scrollY < 90) {
+          bar.classList.remove('is-fixed', 'is-leaving');
+        } else {
+          bar.classList.add('is-leaving');
+        }
+      }
+
+      bar.addEventListener('animationend', function () {
+        if (!stuck) bar.classList.remove('is-fixed', 'is-leaving');
+      });
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
     })();
   </script>
 </body>
