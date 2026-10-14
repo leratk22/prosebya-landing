@@ -9,6 +9,18 @@
   <link rel="preload" href="fonts/EuclidCircularA-Regular-WebXL.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/EuclidCircularA-Medium-WebXL.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/styles.css">
+  <script>
+    // Как на prosebya.ru: от 1440px вся страница растёт вместе с шириной окна
+    (function () {
+      var root = document.documentElement;
+      function fit() {
+        var w = window.innerWidth;
+        root.style.zoom = w > 1440 ? w / 1440 : '';
+      }
+      fit();
+      window.addEventListener('resize', fit);
+    })();
+  </script>
 </head>
 <body>
 
